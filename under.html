@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Site Under Construction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    body {
+      background: #1e2a38;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      animation: fadeIn 1.5s ease-out;
+    }
+
+    .emoji {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="emoji">🚧</div>
+    <h1>Site Under Construction</h1>
+    <p>We're working hard to bring you something awesome.<br>Stay tuned!</p>
+  </div>
+</body>
+</html>
