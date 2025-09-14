@@ -692,8 +692,11 @@ body, p, input, button {
 
 /* Adjust search button position to make space */
 #search-btn {
-    right: calc(15% - 100px); /* Keep this as is */
-}
+    right: calc(15% - 100px);
+    padding-right: 25px;
+    right: 150px;
+} /* Keep this as is */
+
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
