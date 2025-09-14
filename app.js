@@ -10,6 +10,7 @@ const successMessage = document.getElementById('success-message');
 const loading = document.getElementById('loading');
 const currentDate = document.getElementById('current-date');
 const apiKeyStatus = document.getElementById('api-key-status');
+const locationBtn = document.getElementById('location-btn');
 
 // API key
 const apiKey = '88501636edc671e8a5549975209fd044';
@@ -32,6 +33,7 @@ currentDate.textContent = today.toDateString();
 setWelcomeState();
 
 // Event listeners
+locationBtn.addEventListener('click', getCurrentLocationWeather);
 searchBtn.addEventListener('click', getWeather);
 cityInput.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') getWeather();
@@ -430,4 +432,77 @@ function createStarsAnimation() {
         star.style.animationDelay = `${Math.random() * 5}s`;
         container.appendChild(star);
     }
+}
+// Add this function to get current location weather
+function getCurrentLocationWeather() {
+    if (!navigator.geolocation) {
+        showInputError('Geolocation is not supported by your browser');
+        return;
+    }
+    
+    // Show loading
+    loading.style.display = 'block';
+    errorMessage.style.display = 'none';
+    successMessage.style.display = 'none';
+    clearInputError();
+    
+    // Get current position
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+            // Fetch weather by coordinates
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${currentUnit}&appid=${apiKey}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Location not found');
+                    return response.json();
+                })
+                .then(data => {
+                    displayCurrentWeather(data);
+                    loading.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    
+                    // Update input field with current city name
+                    cityInput.value = data.name;
+                    
+                    // Fetch forecast
+                    return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=${currentUnit}&appid=${apiKey}`);
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Forecast not found');
+                    return response.json();
+                })
+                .then(data => {
+                    displayForecast(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showInputError('Unable to get weather for your location');
+                    loading.style.display = 'none';
+                });
+        },
+        error => {
+            loading.style.display = 'none';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    showInputError('Location access denied. Please enable location services.');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    showInputError('Location information unavailable.');
+                    break;
+                case error.TIMEOUT:
+                    showInputError('Location request timed out.');
+                    break;
+                default:
+                    showInputError('An unknown error occurred.');
+                    break;
+            }
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+        }
+    );
 }
